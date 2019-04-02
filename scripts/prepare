@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -xe
+
+source ./bootstrap
+
+for VERSION in ${VERSIONS[*]}
+do
+    prepare_version
+done

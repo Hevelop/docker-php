@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -xe
+
+function build_version() {
+    for DISTRO in ${DISTROS[*]}
+    do
+        build_distro
+    done
+}
+
+function build_distro() {
+    for TYPE in ${TYPES[*]}
+    do
+        build_type
+    done
+}
+
+function build_type() {
+    docker build --no-cache --tag hevelop/php:$VERSION-$TYPE-$DISTRO ../dist/$VERSION/$DISTRO/$TYPE
+}
+
+function push_version() {
+    for DISTRO in ${DISTROS[*]}
+    do
+        push_distro
+    done
+}
+
+function push_distro() {
+    for TYPE in ${TYPES[*]}
+    do
+        push_type
+    done
+}
+
+function push_type() {
+    docker push hevelop/php:$VERSION-$TYPE-$DISTRO
+}
+
+function prepare_version() {
+    for DISTRO in ${DISTROS[*]}
+    do
+        prepare_distro
+    done
+}
+
+function prepare_distro() {
+    for TYPE in ${TYPES[*]}
+    do
+        prepare_type
+    done
+}
+
+function prepare_type() {
+    mkdir -p ../dist/$VERSION/$DISTRO/$TYPE
+   if [ "$TYPE" = "cli" ]; then
+       CMD="[\"php\", \"-A\"]"
+    else
+       CMD="[\"php-fpm\", \"-A\"]"
+    fi
+    sed -e "s@%VERSION%@$VERSION@" \
+	    -e "s@%DISTRO%@$DISTRO@" \
+	    -e "s@%TYPE%@$TYPE@" \
+	    -e "s@%CMD%@$CMD@" \
+	    ../Dockerfile-$DISTRO.template > ../dist/$VERSION/$DISTRO/$TYPE/Dockerfile
+}
