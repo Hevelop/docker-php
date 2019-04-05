@@ -55,12 +55,27 @@ function prepare_type() {
     mkdir -p ../dist/$VERSION/$DISTRO/$TYPE
    if [ "$TYPE" = "cli" ]; then
        CMD="[\"php\", \"-A\"]"
-    else
+   else
        CMD="[\"php-fpm\", \"-A\"]"
-    fi
-    sed -e "s@%VERSION%@$VERSION@" \
-	    -e "s@%DISTRO%@$DISTRO@" \
-	    -e "s@%TYPE%@$TYPE@" \
-	    -e "s@%CMD%@$CMD@" \
-	    ../Dockerfile-$DISTRO.template > ../dist/$VERSION/$DISTRO/$TYPE/Dockerfile
+   fi
+
+   if [ "$DISTRO" = "alpine" ]; then
+       if [ "$VERSION" = "7.2" ]; then
+           CRYPT_LIB=""
+       else
+           CRYPT_LIB="mcrypt"
+       fi
+   else
+       if [ "$VERSION" = "7.2" ]; then
+           CRYPT_LIB=""
+       else
+           CRYPT_LIB="mcrypt"
+       fi
+   fi
+   sed -e "s@%VERSION%@$VERSION@" \
+	   -e "s@%DISTRO%@$DISTRO@" \
+	   -e "s@%TYPE%@$TYPE@" \
+	   -e "s@%CMD%@$CMD@" \
+	   -e "s@%CRYPT_LIB%@$CRYPT_LIB@" \
+	   ../Dockerfile-$DISTRO.template > ../dist/$VERSION/$DISTRO/$TYPE/Dockerfile
 }

@@ -1,4 +1,4 @@
-FROM php:%VERSION%-%TYPE%-%DISTRO%
+FROM php:7.2-fpm-stretch
 ARG BUILD_PACKAGE="libfreetype6-dev libicu-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxml2-dev libxslt1-dev"
 
 RUN apt-get update \
@@ -14,7 +14,7 @@ RUN apt-get update \
     zip \
     soap \
     bcmath \
-    %CRYPT_LIB% \
+     \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get remove -y $BUILD_PACKAGE
-CMD %CMD%
+CMD ["php-fpm", "-A"]

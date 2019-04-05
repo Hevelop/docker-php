@@ -1,4 +1,4 @@
-FROM php:%VERSION%-%TYPE%-%DISTRO%
+FROM php:7.2-fpm-alpine
 
 RUN apk add --no-cache --virtual .build-deps freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev libxml2-dev icu-dev gettext-dev libxslt-dev libmcrypt-dev && \
     docker-php-ext-configure \
@@ -13,6 +13,6 @@ RUN apk add --no-cache --virtual .build-deps freetype libpng libjpeg-turbo freet
     zip \
     soap \
     bcmath \
-    %CRYPT_LIB% \
+     \
 && apk del .build-deps
-CMD %CMD%
+CMD ["php-fpm", "-A"]
