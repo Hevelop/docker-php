@@ -1,3 +1,4 @@
+def label = env.BUILD_TAG.replace("%2F", "-")
 
 podTemplate(
         label: label,
