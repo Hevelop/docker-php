@@ -1,7 +1,7 @@
 
 prepare:
 	cd scripts && bash prepare
-build: prepare
+build:
 	cd scripts && bash build
 publish: build push
 push:
