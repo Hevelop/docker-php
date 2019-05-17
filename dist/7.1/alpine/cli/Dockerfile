@@ -13,6 +13,4 @@ RUN apk add --no-cache --virtual .build-deps freetype libpng libjpeg-turbo freet
     zip \
     soap \
     bcmath \
-    mcrypt \
-&& apk del .build-deps
-CMD ["php", "-A"]
+    mcrypt

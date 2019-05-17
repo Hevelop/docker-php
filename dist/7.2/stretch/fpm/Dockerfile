@@ -15,6 +15,4 @@ RUN apt-get update \
     soap \
     bcmath \
      \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get remove -y $BUILD_PACKAGE
-CMD ["php-fpm", "-A"]
+    && rm -rf /var/lib/apt/lists/*

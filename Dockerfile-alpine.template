@@ -13,6 +13,4 @@ RUN apk add --no-cache --virtual .build-deps freetype libpng libjpeg-turbo freet
     zip \
     soap \
     bcmath \
-    %CRYPT_LIB% \
-&& apk del .build-deps
-CMD %CMD%
+    %CRYPT_LIB%
