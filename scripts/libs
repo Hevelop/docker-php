@@ -17,6 +17,9 @@ function build_distro() {
 
 function build_type() {
     docker build --no-cache --tag hevelop/php:$VERSION-$TYPE-$DISTRO ../dist/$VERSION/$DISTRO/$TYPE
+    if [ "$TYPE" = "cli" ]; then
+        docker build --tag --no-cache hevelop/php:$VERSION-$TYPE-$DISTRO-supervisord ../dist/$VERSION/$DISTRO/$TYPE/supervisord
+    fi
 }
 
 function push_version() {
@@ -77,5 +80,25 @@ function prepare_type() {
 	   -e "s@%TYPE%@$TYPE@" \
 	   -e "s@%CMD%@$CMD@" \
 	   -e "s@%CRYPT_LIB%@$CRYPT_LIB@" \
-	   ../Dockerfile-$DISTRO.template > ../dist/$VERSION/$DISTRO/$TYPE/Dockerfile
+	   ../templates/docker/Dockerfile-$DISTRO.template > ../dist/$VERSION/$DISTRO/$TYPE/Dockerfile
+
+    if [ "$TYPE" = "cli" ]; then
+        mkdir -p ../dist/$VERSION/$DISTRO/$TYPE/supervisord
+
+        sed -e "s@%VERSION%@$VERSION@" \
+            -e "s@%DISTRO%@$DISTRO@" \
+            -e "s@%TYPE%@$TYPE@" \
+            -e "s@%CMD%@$CMD@" \
+            -e "s@%CRYPT_LIB%@$CRYPT_LIB@" \
+            ../templates/docker/Dockerfile-$DISTRO.template > ../dist/$VERSION/$DISTRO/$TYPE/supervisord/Dockerfile
+
+        sed -e "s@%VERSION%@$VERSION@" \
+            -e "s@%DISTRO%@$DISTRO@" \
+            -e "s@%TYPE%@$TYPE@" \
+            -e "s@%CMD%@$CMD@" \
+            -e "s@%CRYPT_LIB%@$CRYPT_LIB@" \
+            ../templates/docker/Dockerfile-$DISTRO-supervisord.template >> ../dist/$VERSION/$DISTRO/$TYPE/supervisord/Dockerfile
+            
+        cp ../templates/supervisord/supervisord.conf ../dist/$VERSION/$DISTRO/$TYPE/supervisord/supervisord.conf
+    fi
 }

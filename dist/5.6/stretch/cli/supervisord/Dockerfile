@@ -1,4 +1,4 @@
-FROM php:7.1-cli-stretch
+FROM php:5.6-cli-stretch
 ARG BUILD_PACKAGE="libfreetype6-dev libicu-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxml2-dev libxslt1-dev"
 
 RUN apt-get update \
@@ -17,3 +17,8 @@ RUN apt-get update \
     mcrypt \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt update && apt install --no-install-recommends -y supervisor && rm -rf /var/lib/apt/lists/*
+
+ADD supervisord.conf /etc/
+
+ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]

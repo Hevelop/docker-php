@@ -1,4 +1,4 @@
-FROM php:7.2-cli-alpine
+FROM php:%VERSION%-%TYPE%-%DISTRO%
 
 RUN apk add --no-cache --virtual .build-deps freetype \
     libpng \
@@ -22,5 +22,5 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     zip \
     soap \
     bcmath \
-    ;
+    %CRYPT_LIB%;
 

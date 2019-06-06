@@ -22,4 +22,5 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     zip \
     soap \
     bcmath \
-    
+    ;
+

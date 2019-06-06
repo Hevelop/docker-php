@@ -1,4 +1,4 @@
-FROM php:%VERSION%-%TYPE%-%DISTRO%
+FROM php:7.2-cli-alpine
 
 RUN apk add --no-cache --virtual .build-deps freetype \
     libpng \
@@ -22,4 +22,10 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     zip \
     soap \
     bcmath \
-    %CRYPT_LIB%
+    ;
+
+RUN apk add --update supervisor && rm  -rf /tmp/* /var/cache/apk/*
+
+ADD supervisord.conf /etc/
+
+ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]

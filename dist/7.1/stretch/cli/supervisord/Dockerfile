@@ -17,3 +17,8 @@ RUN apt-get update \
     mcrypt \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt update && apt install --no-install-recommends -y supervisor && rm -rf /var/lib/apt/lists/*
+
+ADD supervisord.conf /etc/
+
+ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
