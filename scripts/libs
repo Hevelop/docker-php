@@ -16,9 +16,9 @@ function build_distro() {
 }
 
 function build_type() {
-    docker build --no-cache --tag hevelop/php:$VERSION-$TYPE-$DISTRO ../dist/$VERSION/$DISTRO/$TYPE
+    docker build  --tag hevelop/php:$VERSION-$TYPE-$DISTRO ../dist/$VERSION/$DISTRO/$TYPE
     if [ "$TYPE" = "cli" ]; then
-        docker build --no-cache --tag hevelop/php:$VERSION-$TYPE-$DISTRO-supervisord ../dist/$VERSION/$DISTRO/$TYPE/supervisord
+        docker build --tag hevelop/php:$VERSION-$TYPE-$DISTRO-supervisord ../dist/$VERSION/$DISTRO/$TYPE/supervisord
     fi
 }
 
@@ -38,6 +38,28 @@ function push_distro() {
 
 function push_type() {
     docker push hevelop/php:$VERSION-$TYPE-$DISTRO
+}
+
+function docker_purge_version() {
+    for DISTRO in ${DISTROS[*]}
+    do
+        docker_purge_distro
+    done
+}
+
+function docker_purge_distro() {
+    for TYPE in ${TYPES[*]}
+    do
+        docker_purge_type
+    done
+}
+
+function docker_purge_type() {
+    docker rmi hevelop/php:$VERSION-$TYPE-$DISTRO
+    docker rmi php:$VERSION-$TYPE-$DISTRO
+    if [ "$TYPE" = "cli" ]; then
+        docker rmi hevelop/php:$VERSION-$TYPE-$DISTRO-supervisord
+    fi
 }
 
 function prepare_version() {
