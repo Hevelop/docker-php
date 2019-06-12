@@ -56,7 +56,7 @@ function docker_purge_distro() {
 
 function docker_purge_type() {
     docker rmi hevelop/php:$VERSION-$TYPE-$DISTRO
-    docker rmi php:$VERSION-$TYPE-$DISTRO
+    #docker rmi php:$VERSION-$TYPE-$DISTRO
     if [ "$TYPE" = "cli" ]; then
         docker rmi hevelop/php:$VERSION-$TYPE-$DISTRO-supervisord
     fi
