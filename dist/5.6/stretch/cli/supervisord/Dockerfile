@@ -22,3 +22,4 @@ RUN apt update && apt install --no-install-recommends -y supervisor && rm -rf /v
 ADD supervisord.conf /etc/
 
 ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
+

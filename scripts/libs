@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -xe
+set -e
 
 function build_version() {
     for DISTRO in ${DISTROS[*]}
@@ -120,7 +120,25 @@ function prepare_type() {
             -e "s@%CMD%@$CMD@" \
             -e "s@%CRYPT_LIB%@$CRYPT_LIB@" \
             ../templates/docker/Dockerfile-$DISTRO-supervisord.template >> ../dist/$VERSION/$DISTRO/$TYPE/supervisord/Dockerfile
-            
+
+        if [[ "$CRYPT_LIB" != "mcrypt" ]]; then
+              sed -e "s@%VERSION%@$VERSION@" \
+                -e "s@%DISTRO%@$DISTRO@" \
+                -e "s@%TYPE%@$TYPE@" \
+                -e "s@%CMD%@$CMD@" \
+                -e "s@%CRYPT_LIB%@$CRYPT_LIB@" \
+                ../templates/docker/Dockerfile-$DISTRO-sodium.template >> ../dist/$VERSION/$DISTRO/$TYPE/supervisord/Dockerfile
+        fi
+
         cp ../templates/supervisord/supervisord.conf ../dist/$VERSION/$DISTRO/$TYPE/supervisord/supervisord.conf
+    fi
+
+    if [[ "$CRYPT_LIB" != "mcrypt" ]]; then
+        sed -e "s@%VERSION%@$VERSION@" \
+            -e "s@%DISTRO%@$DISTRO@" \
+            -e "s@%TYPE%@$TYPE@" \
+            -e "s@%CMD%@$CMD@" \
+            -e "s@%CRYPT_LIB%@$CRYPT_LIB@" \
+            ../templates/docker/Dockerfile-$DISTRO-sodium.template >> ../dist/$VERSION/$DISTRO/$TYPE/Dockerfile
     fi
 }

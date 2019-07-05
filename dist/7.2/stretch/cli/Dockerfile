@@ -17,3 +17,11 @@ RUN apt-get update \
      \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update \
+        && apt-get install -y apt-transport-https \
+        && curl https://packages.sury.org/php/apt.gpg -o /etc/apt/trusted.gpg.d/php.gpg \
+        && echo "deb https://packages.sury.org/php/ stretch main" > /etc/apt/sources.list.d/php.list \
+        && rm -rf /var/lib/apt/lists/* && apt-get update \
+        && apt-get install --yes libsodium-dev \
+        && docker-php-ext-install sodium
+

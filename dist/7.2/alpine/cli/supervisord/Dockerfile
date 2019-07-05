@@ -29,3 +29,7 @@ RUN apk add --update supervisor && rm  -rf /tmp/* /var/cache/apk/*
 ADD supervisord.conf /etc/
 
 ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
+
+RUN apk add --no-cache libsodium libsodium-dev \
+        && docker-php-ext-install sodium
+

@@ -24,3 +24,6 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     bcmath \
     ;
 
+RUN apk add --no-cache libsodium libsodium-dev \
+        && docker-php-ext-install sodium
+
