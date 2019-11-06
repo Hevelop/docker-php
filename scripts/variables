@@ -5,7 +5,6 @@ VERSIONS=(5.6 7.0 7.1 7.2)
 DISTROS=(alpine stretch)
 TYPES=(cli fpm)
 
-
 #VERSIONS=(7.2)
-#DISTROS=(alpine stretch)
-#TYPES=(fpm)
+#DISTROS=(alpine)
+#TYPES=(cli fpm)

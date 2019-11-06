@@ -1,4 +1,4 @@
-FROM php:7.0-cli-alpine
+FROM php:%VERSION%-%TYPE%-%DISTRO%
 
 RUN apk add --no-cache --virtual .build-deps freetype \
     $PHPIZE_DEPS \
@@ -12,7 +12,6 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     libxslt-dev \
     libmcrypt-dev \
     imagemagick imagemagick-dev \
-    tini \
 && pecl install imagick \
 && docker-php-ext-enable imagick \
 && docker-php-ext-configure \
@@ -27,16 +26,5 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     zip \
     soap \
     bcmath \
-    mcrypt;
-
-
-ENTRYPOINT ["tini", "--"]
-
-# Run your program under Tini
-CMD ["php", "-A"]
-RUN apk add --update supervisor && rm  -rf /tmp/* /var/cache/apk/*
-
-ADD supervisord.conf /etc/
-
-ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
+    %CRYPT_LIB%;
 

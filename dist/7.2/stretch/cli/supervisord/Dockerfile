@@ -19,6 +19,13 @@ RUN apt-get update \
      \
     && rm -rf /var/lib/apt/lists/*
 
+ENV TINI_VERSION v0.18.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+ENTRYPOINT ["/tini", "--", "docker-php-entrypoint"]
+
+# Run your program under Tini
+CMD ["php", "-A"]
 RUN apt update && apt install --no-install-recommends -y supervisor && rm -rf /var/lib/apt/lists/*
 
 ADD supervisord.conf /etc/

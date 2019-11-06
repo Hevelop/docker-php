@@ -12,6 +12,7 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     libxslt-dev \
     libmcrypt-dev \
     imagemagick imagemagick-dev \
+    tini \
 && pecl install imagick \
 && docker-php-ext-enable imagick \
 && docker-php-ext-configure \
@@ -28,3 +29,8 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     bcmath \
     mcrypt;
 
+
+ENTRYPOINT ["tini", "--"]
+
+# Run your program under Tini
+CMD ["php", "-A"]

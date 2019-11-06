@@ -1,4 +1,4 @@
-FROM php:7.1-cli-stretch
+FROM php:%VERSION%-%TYPE%-%DISTRO%
 ARG BUILD_PACKAGE="libfreetype6-dev libicu-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxml2-dev libxslt1-dev imagemagick libpng-dev libmagickwand-dev libmagickcore-dev"
 
 RUN apt-get update \
@@ -16,13 +16,6 @@ RUN apt-get update \
     zip \
     soap \
     bcmath \
-    mcrypt \
+    %CRYPT_LIB% \
     && rm -rf /var/lib/apt/lists/*
 
-ENV TINI_VERSION v0.18.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-RUN chmod +x /tini
-ENTRYPOINT ["/tini", "--", "docker-php-entrypoint"]
-
-# Run your program under Tini
-CMD ["php", "-A"]
