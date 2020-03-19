@@ -84,16 +84,13 @@ function prepare_type() {
        CMD="[\"php-fpm\", \"-A\"]"
    fi
 
+   CRYPT_LIB=""
    if [ "$DISTRO" = "alpine" ]; then
-       if [ "$VERSION" = "7.2" ]; then
-           CRYPT_LIB=""
-       else
+       if [[ "5.6 7.0 7.1" =~ "$VERSION" ]]; then
            CRYPT_LIB="mcrypt"
        fi
    else
-       if [ "$VERSION" = "7.2" ]; then
-           CRYPT_LIB=""
-       else
+       if [[ "5.6 7.0 7.1" =~ "$VERSION" ]]; then
            CRYPT_LIB="mcrypt"
        fi
    fi

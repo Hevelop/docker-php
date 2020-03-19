@@ -1,4 +1,4 @@
-FROM php:%VERSION%-%TYPE%-%DISTRO%
+FROM php:7.3-cli-stretch
 ARG BUILD_PACKAGE="libfreetype6-dev libicu-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxml2-dev libzip-dev libxslt1-dev imagemagick libpng-dev libmagickwand-dev libmagickcore-dev"
 
 RUN apt-get update \
@@ -16,7 +16,7 @@ RUN apt-get update \
     zip \
     soap \
     bcmath \
-    %CRYPT_LIB% \
+     \
     && rm -rf /var/lib/apt/lists/*
 
 ENV TINI_VERSION v0.18.0
@@ -25,4 +25,12 @@ RUN chmod +x /tini
 ENTRYPOINT ["/tini", "--", "docker-php-entrypoint"]
 
 # Run your program under Tini
-CMD %CMD%
+CMD ["php", "-A"]
+RUN apt-get update \
+        && apt-get install -y apt-transport-https \
+        && curl https://packages.sury.org/php/apt.gpg -o /etc/apt/trusted.gpg.d/php.gpg \
+        && echo "deb https://packages.sury.org/php/ stretch main" > /etc/apt/sources.list.d/php.list \
+        && rm -rf /var/lib/apt/lists/* && apt-get update \
+        && apt-get install --yes libsodium-dev \
+        && docker-php-ext-install sodium
+

@@ -1,4 +1,4 @@
-FROM php:%VERSION%-%TYPE%-%DISTRO%
+FROM php:7.3-cli-alpine
 
 RUN apk add --no-cache --virtual .build-deps freetype \
     $PHPIZE_DEPS \
@@ -30,10 +30,19 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     zip \
     soap \
     bcmath \
-    %CRYPT_LIB%;
+    ;
 
 
 ENTRYPOINT ["tini", "--"]
 
 # Run your program under Tini
-CMD %CMD%
+CMD ["php", "-A"]
+RUN apk add --update supervisor && rm  -rf /tmp/* /var/cache/apk/*
+
+ADD supervisord.conf /etc/
+
+ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
+
+RUN apk add --no-cache libsodium libsodium-dev \
+        && docker-php-ext-install sodium
+

@@ -1,4 +1,4 @@
-FROM php:%VERSION%-%TYPE%-%DISTRO%
+FROM php:7.3-fpm-alpine
 
 RUN apk add --no-cache --virtual .build-deps freetype \
     $PHPIZE_DEPS \
@@ -14,7 +14,6 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     libxslt-dev \
     libmcrypt-dev \
     imagemagick imagemagick-dev \
-    tini \
 && pecl install imagick \
 && docker-php-ext-enable imagick \
 && docker-php-ext-configure \
@@ -30,10 +29,8 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     zip \
     soap \
     bcmath \
-    %CRYPT_LIB%;
+    ;
 
+RUN apk add --no-cache libsodium libsodium-dev \
+        && docker-php-ext-install sodium
 
-ENTRYPOINT ["tini", "--"]
-
-# Run your program under Tini
-CMD %CMD%
