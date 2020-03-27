@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-VERSIONS=(7.3)
-DISTROS=(alpine stretch)
-TYPES=(cli fpm)
+VERSIONS=(7.2)
+DISTROS=(alpine)
+TYPES=(cli)
 
 #VERSIONS=(7.2)
 #DISTROS=(alpine)

@@ -38,6 +38,7 @@ function push_distro() {
 
 function push_type() {
     docker push hevelop/php:$VERSION-$TYPE-$DISTRO
+    docker push hevelop/php:$VERSION-$TYPE-$DISTRO-supervisord
 }
 
 function docker_purge_version() {
