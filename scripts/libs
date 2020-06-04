@@ -38,7 +38,9 @@ function push_distro() {
 
 function push_type() {
     docker push hevelop/php:$VERSION-$TYPE-$DISTRO
-    docker push hevelop/php:$VERSION-$TYPE-$DISTRO-supervisord
+    if [ "$TYPE" = "cli" ]; then
+        docker push hevelop/php:$VERSION-$TYPE-$DISTRO-supervisord
+    fi
 }
 
 function docker_purge_version() {

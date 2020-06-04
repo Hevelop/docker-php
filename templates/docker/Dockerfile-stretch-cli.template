@@ -16,6 +16,7 @@ RUN apt-get update \
     zip \
     soap \
     bcmath \
+    sockets \
     %CRYPT_LIB% \
     && rm -rf /var/lib/apt/lists/*
 

@@ -1,5 +1,5 @@
 FROM php:7.0-cli-stretch
-ARG BUILD_PACKAGE="libfreetype6-dev libicu-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxml2-dev libxslt1-dev imagemagick libpng-dev libmagickwand-dev libmagickcore-dev"
+ARG BUILD_PACKAGE="libfreetype6-dev libicu-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxml2-dev libzip-dev libxslt1-dev imagemagick libpng-dev libmagickwand-dev libmagickcore-dev"
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y $BUILD_PACKAGE \
@@ -16,6 +16,7 @@ RUN apt-get update \
     zip \
     soap \
     bcmath \
+    sockets \
     mcrypt \
     && rm -rf /var/lib/apt/lists/*
 

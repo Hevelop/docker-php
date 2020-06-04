@@ -6,6 +6,8 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     libjpeg-turbo \
     freetype-dev \
     libpng-dev \
+    zlib-dev \
+    libzip-dev \
     libjpeg-turbo-dev \
     libxml2-dev icu-dev \
     gettext-dev \
@@ -17,6 +19,7 @@ RUN apk add --no-cache --virtual .build-deps freetype \
 && docker-php-ext-enable imagick \
 && docker-php-ext-configure \
     gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+&& docker-php-ext-configure zip --with-libzip \
 && docker-php-ext-install \
     dom \
     gd \
@@ -27,6 +30,7 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     zip \
     soap \
     bcmath \
+    sockets \
     mcrypt;
 
 
@@ -38,5 +42,5 @@ RUN apk add --update supervisor && rm  -rf /tmp/* /var/cache/apk/*
 
 ADD supervisord.conf /etc/
 
-ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
+CMD ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
 
