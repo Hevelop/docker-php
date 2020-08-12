@@ -15,7 +15,7 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     libmcrypt-dev \
     imagemagick imagemagick-dev \
     tini \
-&& pecl install imagick \
+&& pecl install imagick amqplib \
 && docker-php-ext-enable imagick \
 && docker-php-ext-configure \
     gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \

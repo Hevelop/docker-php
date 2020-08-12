@@ -15,7 +15,7 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     libmcrypt-dev \
     oniguruma-dev \
     imagemagick imagemagick-dev \
-&& pecl install imagick \
+&& pecl install imagick amqplib \
 && docker-php-ext-enable imagick \
 && docker-php-ext-configure \
     gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \

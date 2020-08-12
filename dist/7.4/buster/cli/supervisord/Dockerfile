@@ -3,7 +3,7 @@ ARG BUILD_PACKAGE="libfreetype6-dev libicu-dev libjpeg62-turbo-dev libmcrypt-dev
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y $BUILD_PACKAGE \
-    && pecl install imagick \
+    && pecl install imagick amqplib \
     && docker-php-ext-enable imagick \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install \

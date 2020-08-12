@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
-VERSIONS=(7.2 7.0 7.1)
-DISTROS=(alpine stretch)
-TYPES=(cli fpm)
-
-#VERSIONS=(7.2)
-#DISTROS=(alpine)
+#VERSIONS=(7.2 7.0 7.1)
+#DISTROS=(alpine stretch)
 #TYPES=(cli fpm)
+
+VERSIONS=(7.3 7.4)
+DISTROS=(alpine buster)
+TYPES=(fpm cli)

@@ -1,4 +1,4 @@
-FROM php:7.3-cli-stretch
+FROM php:7.3-fpm-buster
 ARG BUILD_PACKAGE="libfreetype6-dev libicu-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev libxml2-dev libzip-dev libxslt1-dev imagemagick libpng-dev libmagickwand-dev libmagickcore-dev"
 
 RUN apt-get update \
@@ -19,13 +19,6 @@ RUN apt-get update \
      \
     && rm -rf /var/lib/apt/lists/*
 
-ENV TINI_VERSION v0.18.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-RUN chmod +x /tini
-ENTRYPOINT ["/tini", "--", "docker-php-entrypoint"]
-
-# Run your program under Tini
-CMD ["php", "-A"]
 RUN apt-get update \
         && apt-get install -y apt-transport-https \
         && curl https://packages.sury.org/php/apt.gpg -o /etc/apt/trusted.gpg.d/php.gpg \
