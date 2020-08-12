@@ -8,6 +8,7 @@ RUN apt-get update \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install \
     dom \
+    sockets \
     gd \
     intl \
     mbstring \

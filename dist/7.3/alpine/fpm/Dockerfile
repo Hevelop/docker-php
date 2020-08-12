@@ -21,6 +21,7 @@ RUN apk add --no-cache --virtual .build-deps freetype \
 && docker-php-ext-configure zip --with-libzip \
 && docker-php-ext-install \
     dom \
+    sockets \
     gd \
     intl \
     mbstring \
