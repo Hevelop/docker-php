@@ -12,6 +12,7 @@ RUN apt-get update \
     gd \
     intl \
     mbstring \
+    mysqli \
     pdo_mysql \
     xsl \
     zip \

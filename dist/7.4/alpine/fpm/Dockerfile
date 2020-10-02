@@ -26,6 +26,7 @@ RUN apk add --no-cache --virtual .build-deps freetype \
     gd \
     intl \
     mbstring \
+    mysqli \
     pdo_mysql \
     xsl \
     zip \
