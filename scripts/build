@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 source ./bootstrap
 
-for VERSION in ${VERSIONS[*]}
-do
-    build_version
-done
+build_archs

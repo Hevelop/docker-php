@@ -1,4 +1,4 @@
-FROM php:%VERSION%-%TYPE%-%DISTRO%
+FROM %ARCHITECTURE%/php:%VERSION%-%TYPE%-%DISTRO%
 
 RUN apk add --no-cache --virtual .build-deps freetype \
     $PHPIZE_DEPS \

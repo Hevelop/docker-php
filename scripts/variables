@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 #VERSIONS=(7.2 7.0 7.1)
 #DISTROS=(alpine stretch)
 #TYPES=(cli fpm)
 
-VERSIONS=(7.3 7.4)
-DISTROS=(alpine buster)
+#ARCHITECTURES=(arm64v8)
+ARCHITECTURES=(amd64 arm64v8)
+VERSIONS=(7.0 7.1 7.2 7.3)
+DISTROS=(stretch)
 TYPES=(fpm cli)

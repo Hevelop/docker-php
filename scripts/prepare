@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 source ./bootstrap
 
-for VERSION in ${VERSIONS[*]}
-do
-    prepare_version
-done
+prepare_archs

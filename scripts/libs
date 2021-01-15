@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
-set -e
+set -ex
+
+function build_archs() {
+    build_arch
+#    for ARCHITECTURE in ${ARCHITECTURES[*]}
+#    do
+#        build_arch
+#    done
+}
+
+function build_arch() {
+    for VERSION in ${VERSIONS[*]}
+    do
+        build_version
+    done
+}
 
 function build_version() {
     for DISTRO in ${DISTROS[*]}
@@ -16,9 +31,17 @@ function build_distro() {
 }
 
 function build_type() {
-    docker build  --tag hevelop/php:$VERSION-$TYPE-$DISTRO ../dist/$VERSION/$DISTRO/$TYPE
+    PLATFORMS=""
+    if [[ " ${ARCHITECTURES[@]} " =~ "arm64v8" ]]; then
+        PLATFORMS="${PLATFORMS}linux/arm64/v8"
+    fi
+    if [[ " ${ARCHITECTURES[@]} " =~ "amd64" ]]; then
+        PLATFORMS="${PLATFORMS},linux/amd64"
+    fi
+    echo $PLATFORMS
+    docker buildx build --platform $PLATFORMS --push --tag hevelop/php:$VERSION-$TYPE-$DISTRO ../dist/$VERSION/$DISTRO/$TYPE
     if [ "$TYPE" = "cli" ]; then
-        docker build --tag hevelop/php:$VERSION-$TYPE-$DISTRO-supervisord ../dist/$VERSION/$DISTRO/$TYPE/supervisord
+        docker buildx build --platform $PLATFORMS --push --tag hevelop/php:$VERSION-$TYPE-$DISTRO-supervisord ../dist/$VERSION/$DISTRO/$TYPE/supervisord
     fi
 }
 
@@ -65,6 +88,20 @@ function docker_purge_type() {
     fi
 }
 
+function prepare_archs() {
+    for ARCHITECTURE in ${ARCHITECTURES[*]}
+    do
+        prepare_arch
+    done
+}
+
+function prepare_arch() {
+    for VERSION in ${VERSIONS[*]}
+    do
+        prepare_version
+    done
+}
+
 function prepare_version() {
     for DISTRO in ${DISTROS[*]}
     do
@@ -80,7 +117,7 @@ function prepare_distro() {
 }
 
 function prepare_type() {
-    mkdir -p ../dist/$VERSION/$DISTRO/$TYPE
+    mkdir -p ../dist/$ARCHITECTURE/$VERSION/$DISTRO/$TYPE
    if [ "$TYPE" = "cli" ]; then
        CMD="[\"php\", \"-A\"]"
    else
@@ -98,47 +135,52 @@ function prepare_type() {
        fi
    fi
    sed -e "s@%VERSION%@$VERSION@" \
+       -e "s@%ARCHITECTURE%@$ARCHITECTURE@" \
 	   -e "s@%DISTRO%@$DISTRO@" \
 	   -e "s@%TYPE%@$TYPE@" \
 	   -e "s@%CMD%@$CMD@" \
 	   -e "s@%CRYPT_LIB%@$CRYPT_LIB@" \
-	   ../templates/docker/Dockerfile-$DISTRO-$TYPE.template > ../dist/$VERSION/$DISTRO/$TYPE/Dockerfile
+	   ../templates/docker/Dockerfile-$DISTRO-$TYPE.template > ../dist/$ARCHITECTURE/$VERSION/$DISTRO/$TYPE/Dockerfile
 
     if [ "$TYPE" = "cli" ]; then
-        mkdir -p ../dist/$VERSION/$DISTRO/$TYPE/supervisord
+        mkdir -p ../dist/$ARCHITECTURE/$VERSION/$DISTRO/$TYPE/supervisord
 
         sed -e "s@%VERSION%@$VERSION@" \
+            -e "s@%ARCHITECTURE%@$ARCHITECTURE@" \
             -e "s@%DISTRO%@$DISTRO@" \
             -e "s@%TYPE%@$TYPE@" \
             -e "s@%CMD%@$CMD@" \
             -e "s@%CRYPT_LIB%@$CRYPT_LIB@" \
-            ../templates/docker/Dockerfile-$DISTRO-$TYPE.template > ../dist/$VERSION/$DISTRO/$TYPE/supervisord/Dockerfile
+            ../templates/docker/Dockerfile-$DISTRO-$TYPE.template > ../dist/$ARCHITECTURE/$VERSION/$DISTRO/$TYPE/supervisord/Dockerfile
 
         sed -e "s@%VERSION%@$VERSION@" \
+            -e "s@%ARCHITECTURE%@$ARCHITECTURE@" \
             -e "s@%DISTRO%@$DISTRO@" \
             -e "s@%TYPE%@$TYPE@" \
             -e "s@%CMD%@$CMD@" \
             -e "s@%CRYPT_LIB%@$CRYPT_LIB@" \
-            ../templates/docker/Dockerfile-$DISTRO-supervisord.template >> ../dist/$VERSION/$DISTRO/$TYPE/supervisord/Dockerfile
+            ../templates/docker/Dockerfile-$DISTRO-supervisord.template >> ../dist/$ARCHITECTURE/$VERSION/$DISTRO/$TYPE/supervisord/Dockerfile
 
         if [[ "$CRYPT_LIB" != "mcrypt" ]]; then
               sed -e "s@%VERSION%@$VERSION@" \
+                -e "s@%ARCHITECTURE%@$ARCHITECTURE@" \
                 -e "s@%DISTRO%@$DISTRO@" \
                 -e "s@%TYPE%@$TYPE@" \
                 -e "s@%CMD%@$CMD@" \
                 -e "s@%CRYPT_LIB%@$CRYPT_LIB@" \
-                ../templates/docker/Dockerfile-$DISTRO-sodium.template >> ../dist/$VERSION/$DISTRO/$TYPE/supervisord/Dockerfile
+                ../templates/docker/Dockerfile-$DISTRO-sodium.template >> ../dist/$ARCHITECTURE/$VERSION/$DISTRO/$TYPE/supervisord/Dockerfile
         fi
 
-        cp ../templates/supervisord/supervisord.conf ../dist/$VERSION/$DISTRO/$TYPE/supervisord/supervisord.conf
+        cp ../templates/supervisord/supervisord.conf ../dist/$ARCHITECTURE/$VERSION/$DISTRO/$TYPE/supervisord/supervisord.conf
     fi
 
     if [[ "$CRYPT_LIB" != "mcrypt" ]]; then
         sed -e "s@%VERSION%@$VERSION@" \
+            -e "s@%ARCHITECTURE%@$ARCHITECTURE@" \
             -e "s@%DISTRO%@$DISTRO@" \
             -e "s@%TYPE%@$TYPE@" \
             -e "s@%CMD%@$CMD@" \
             -e "s@%CRYPT_LIB%@$CRYPT_LIB@" \
-            ../templates/docker/Dockerfile-$DISTRO-sodium.template >> ../dist/$VERSION/$DISTRO/$TYPE/Dockerfile
+            ../templates/docker/Dockerfile-$DISTRO-sodium.template >> ../dist/$ARCHITECTURE/$VERSION/$DISTRO/$TYPE/Dockerfile
     fi
 }
