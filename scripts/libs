@@ -36,8 +36,12 @@ function build_type() {
         PLATFORMS="${PLATFORMS}linux/arm64/v8"
     fi
     if [[ " ${ARCHITECTURES[@]} " =~ "amd64" ]]; then
-        PLATFORMS="${PLATFORMS},linux/amd64"
+        if [[ ! -z "$PLATFORMS" ]]; then
+            PLATFORMS="${PLATFORMS},"
+        fi
+        PLATFORMS="${PLATFORMS}linux/amd64"
     fi
+    PLATFORMS="${PLATFORMS##*(,)}"
     echo $PLATFORMS
     docker buildx build --platform $PLATFORMS --push --tag hevelop/php:$VERSION-$TYPE-$DISTRO ../dist/$VERSION/$DISTRO/$TYPE
     if [ "$TYPE" = "cli" ]; then
