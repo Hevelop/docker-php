@@ -2,6 +2,7 @@ FROM php:7.4-fpm-alpine
 
 RUN apk add --no-cache --virtual .build-deps freetype \
     $PHPIZE_DEPS \
+    shadow \
     libpng \
     libjpeg-turbo \
     freetype-dev \
